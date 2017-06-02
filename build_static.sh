@@ -12,10 +12,7 @@ apk add --update openssl
 # Install libxml2. Alpine's version does not ship with a static library.
 cd /tmp
 wget ftp://xmlsoft.org/libxml2/libxml2-2.9.4.tar.gz
-wget http://github.com/GNOME/libxml2/archive/CVE-2016-4449.tar.gz
-mv CVE-2016-4449.tar.gz libxml2-2.9.4.tar.gz
 tar -xf libxml2-2.9.4.tar.gz
-mv libxml2-CVE-2016-4449 libxml2-2.9.4
 cd libxml2-2.9.4
 ./configure --disable-shared --enable-static
 make -j2
