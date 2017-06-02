@@ -2,7 +2,7 @@ package libvirt
 
 import (
 	"log"
-	"../backend"
+	"github.com/leapar/libvirt-metrics/backend"
 	"github.com/libvirt/libvirt-go"
 	"fmt"
 	"github.com/kumina/libvirt_exporter/libvirt_schema"

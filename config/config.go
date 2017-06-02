@@ -1,8 +1,8 @@
 package config
 
 import (
-        "../libvirt"
-        "../backend"
+        "github.com/leapar/libvirt-metrics/libvirt"
+        "github.com/leapar/libvirt-metrics/backend"
 )
 
 // Configuration

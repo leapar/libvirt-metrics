@@ -5,24 +5,20 @@ import (
 	"fmt"
 	"log"
 	"os"
-	//"os/signal"
 	"path"
 	"reflect"
 	"strconv"
 	"strings"
-	//"syscall"
 	"time"
 
 	"runtime"
 	"runtime/pprof"
-	"./config"
-	"./backend"
-	"./libvirt"
+	"github.com/leapar/libvirt-metrics/config"
+	"github.com/leapar/libvirt-metrics/backend"
+	"github.com/leapar/libvirt-metrics/libvirt"
 
 	"github.com/takama/daemon"
 
-	//"os/signal"
-	//"syscall"
 	"os/signal"
 	"syscall"
 )
@@ -54,7 +50,7 @@ func queryKvmHost(kvm libvirt.KVM, channel *chan backend.HostStuct) {
 
 // Manage by daemon commands or run the daemon
 func (service *Service) Manage() (string, error) {
-	defer saveHeapProfile()
+	//defer saveHeapProfile()
 	usage := "Usage: myservice install | remove | start | stop | status"
 
 	// if received any kind of command, do it
