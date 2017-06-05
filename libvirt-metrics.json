@@ -7,8 +7,8 @@
   ],
   "Backend": {
     "ApiKey": "e7afaf986f5cc822406cbd5831328462",
-    "HostUrl": "http://172.29.231.177:8000/kvm/v1/host",
-    "MetricUrl": "http://172.29.231.177:8000/kvm/v1/metrics",
+    "HostUrl": "http://172.29.231.177:8001/kvm/v1/host",
+    "MetricUrl": "http://172.29.231.177:8001/kvm/v1/metrics",
     "Type": "kong"
   }
 }

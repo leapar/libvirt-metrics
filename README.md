@@ -41,9 +41,13 @@ libvirt_domain_interface_stats_transmit_packets_total{domain="...",source_bridge
 
 ## docker
 
+Dockerfile2 是原生模式打出来的镜像有1.5G
+Dockerfile 是我处理以后的，打出来镜像80M
+
 ```shell
   
  docker build -t leapar/libvirt:0.11 .
  docker run -d leapar/libvirt:0.11
+ docker run -v `pwd`/libvirt-metrics.json:/etc/libvirt-metrics.json -d test/libvirt:0.1  
 
 ```
