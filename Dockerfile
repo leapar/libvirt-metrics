@@ -23,4 +23,7 @@ RUN set -ex && \
 RUN mkdir -p /go/src /go/bin && chmod -R 777 /go
 ENV GOPATH /go
 ENV PATH /go/bin:$PATH
-#RUN go get github.com/leapar/libvirt-metrics
+RUN go get github.com/leapar/libvirt-metrics && strip /go/bin/libvirt-metrics
+ADD libvirt-metrics.json /etc/libvirt-metrics.json
+
+CMD ["libvirt-metrics"]

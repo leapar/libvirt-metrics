@@ -38,3 +38,12 @@ libvirt_domain_interface_stats_transmit_packets_total{domain="...",source_bridge
 
 ```
 
+
+## docker
+
+```shell
+  
+ docker build -t leapar/libvirt:0.11 .
+ docker run -d leapar/libvirt:0.11
+
+```
