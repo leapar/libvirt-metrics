@@ -19,6 +19,8 @@ RUN set -ex && \
     make -j2 && \
     make install && \
     sed -i 's/^Libs:.*/& -lnl -ltirpc -lxml2/' /usr/local/lib/pkgconfig/libvirt.pc && \
-    mkdir /libvirt-metrics && \
-    cd /libvirt-metrics && \
-    git clone https://github.com/leapar/libvirt-metrics && \
+
+RUN mkdir -p /go/src /go/bin && chmod -R 777 /go
+ENV GOPATH /go
+ENV PATH /go/bin:$PATH
+RUN go get github.com/leapar/libvirt-metrics
