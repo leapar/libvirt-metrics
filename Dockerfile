@@ -18,9 +18,9 @@ RUN set -ex && \
     ./configure --disable-shared --enable-static --localstatedir=/var --without-storage-mpath && \
     make -j2 && \
     make install && \
-    sed -i 's/^Libs:.*/& -lnl -ltirpc -lxml2/' /usr/local/lib/pkgconfig/libvirt.pc && \
+    sed -i 's/^Libs:.*/& -lnl -ltirpc -lxml2/' /usr/local/lib/pkgconfig/libvirt.pc
 
 RUN mkdir -p /go/src /go/bin && chmod -R 777 /go
 ENV GOPATH /go
 ENV PATH /go/bin:$PATH
-RUN go get github.com/leapar/libvirt-metrics
+#RUN go get github.com/leapar/libvirt-metrics

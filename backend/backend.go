@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"github.com/libvirt/libvirt-go"
 
+	"github.com/olegfedoseev/opentsdb"
 	"bytes"
 	"github.com/pquerna/ffjson/ffjson"
 	"compress/gzip"
