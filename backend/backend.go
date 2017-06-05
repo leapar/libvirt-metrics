@@ -7,10 +7,7 @@ import (
 	"time"
 	"strconv"
 	"github.com/libvirt/libvirt-go"
-	"github.com/marpaia/graphite-golang"
-	influxclient "github.com/influxdata/influxdb/client/v2"
 
-	"github.com/olegfedoseev/opentsdb"
 	"bytes"
 	"github.com/pquerna/ffjson/ffjson"
 	"compress/gzip"
@@ -52,13 +49,10 @@ type Backend struct {
 	Password  string
 	Type      string
 	NoArray   bool
-	carbon    *graphite.Graphite
-	influx    influxclient.Client
 	opentsdb  *opentsdb.Client
 }
 
 var stdlog, errlog *log.Logger
-var carbon graphite.Graphite
 
 func (backend *Backend) Init(standardLogs *log.Logger, errorLogs *log.Logger) error {
 	stdlog = standardLogs
@@ -75,14 +69,7 @@ func (backend *Backend) Init(standardLogs *log.Logger, errorLogs *log.Logger) er
 func (backend *Backend) Disconnect() {
 
 	switch backendType := strings.ToLower(backend.Type); backendType {
-	case "graphite":
-		// Disconnect from graphite
-		stdlog.Println("Disconnecting from " + backendType)
-		backend.carbon.Disconnect()
-	case "influxdb":
-		// Disconnect from influxdb
-		stdlog.Println("Disconnecting from " + backendType)
-		backend.influx.Close()
+
 	case "opentsdb":
 		stdlog.Println("Disconnecting from " + backendType)
 	case "kong":

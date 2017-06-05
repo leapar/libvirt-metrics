@@ -28,6 +28,10 @@ make -j2
 make install
 sed -i 's/^Libs:.*/& -lnl -ltirpc -lxml2/' /usr/local/lib/pkgconfig/libvirt.pc
 
+mkdir /libvirt-metrics
+cd /libvirt-metrics
+git clone https://github.com/leapar/libvirt-metrics
+
 # Build the libvirt-metrics.
 cd /libvirt-metrics
 export GOPATH=/gopath
