@@ -77,7 +77,10 @@ func (service *Service) Manage() (string, error) {
 	// read the configuration
 	file, err := os.Open("/etc/" + path.Base(os.Args[0]) + ".json")
 	if err != nil {
-		return "Could not open configuration file", err
+		file, err = os.Open("./" + path.Base(os.Args[0]) + ".json")
+		if err != nil {
+			return "Could not open configuration file", err
+		}
 	}
 	jsondec := json.NewDecoder(file)
 	config := config.Configuration{}
