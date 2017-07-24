@@ -38,19 +38,26 @@ type Point struct {
 	Timestamp  int64
 }
 
+type KeyValue struct {
+	PollerIp string
+}
+
 //Storage backend
 type Backend struct {
 	ApiKey    string
 	MetricUrl string
-	HostUrl string
+	HostUrl   string
 	Hostname  string
 	Port      int
 	Database  string
 	Username  string
 	Password  string
 	Type      string
+	KongHost  string
+	PollerUrl string
 	NoArray   bool
 	opentsdb  *opentsdb.Client
+	PollerTags KeyValue
 }
 
 var stdlog, errlog *log.Logger
@@ -118,13 +125,13 @@ func (backend *Backend) SendMetrics(metrics []Point) {
 			tsdbMetrics = append(tsdbMetrics, &opentsdb.DataPoint{
 				Metric:    point.Group + "." + point.Metric,
 				Value:     strconv.FormatUint(point.Value, 10),
-				Timestamp: point.Timestamp,
+				Timestamp: time.Now().Unix(),
 				Tags:      tags})
 		}
 		//b, _:= json.Marshal(tsdbMetrics)
 		//fmt.Println(string(b))
 
-		url := fmt.Sprintf("%s?api_key=%s&host=%s", backend.MetricUrl, backend.ApiKey, host)
+		url := fmt.Sprintf("%s%s?api_key=%s&host=%s", backend.KongHost, backend.MetricUrl, backend.ApiKey, host)
 		backend.SendNetrics2tsdb(tsdbMetrics, url)
 
 		tsdbMetrics = nil
@@ -187,6 +194,54 @@ func (backend *Backend) SendHost(values []HostInfo, url string) (error) {
 	writer := gzip.NewWriter(&buffer)
 
 	if err := ffjson.NewEncoder(writer).Encode(values); err != nil {
+		return err
+	}
+	if err := writer.Close(); err != nil {
+		return err
+	}
+
+	req, err := http.NewRequest("POST", url, &buffer)
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	req.Header.Set("Content-Encoding", "gzip")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	defer resp.Body.Close()
+
+	return nil
+}
+
+func (backend *Backend) SendPollerMetrics(url string) (error) {
+	var buffer bytes.Buffer
+
+	var tsdbMetrics opentsdb.DataPoints
+	tags := opentsdb.Tags{}
+
+	tags["poller"] = backend.PollerTags.PollerIp;
+	tags["type"] = "kvm";
+
+	tsdbMetrics = append(tsdbMetrics, &opentsdb.DataPoint{
+		Metric:    "poller.up",
+		Value:     1,
+		Timestamp: time.Now().Unix(),
+		Tags:      tags})
+
+	client := &http.Client{
+		Timeout: 5 * time.Second,
+		Transport: &http.Transport{
+			MaxIdleConnsPerHost: 100,
+		},
+	}
+	writer := gzip.NewWriter(&buffer)
+
+	if err := ffjson.NewEncoder(writer).Encode(tsdbMetrics); err != nil {
 		return err
 	}
 	if err := writer.Close(); err != nil {

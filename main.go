@@ -38,8 +38,6 @@ type Service struct {
 	daemon.Daemon
 }
 
-
-
 func queryKvm(kvm libvirt.KVM, config config.Configuration, channel *chan []backend.Point) {
 	kvm.Query(config.Interval,  channel)
 }
@@ -113,7 +111,6 @@ func (service *Service) Manage() (string, error) {
 		}
 	}
 
-
 	err = config.Backend.Init(stdlog, errlog)
 	if err != nil {
 		return "Could not initialize backend", err
@@ -137,6 +134,9 @@ func (service *Service) Manage() (string, error) {
 	tickerFinder := time.NewTicker(time.Second * time.Duration(config.Interval) )//* 20
 	defer tickerFinder.Stop()
 
+	pollerTicker := time.NewTicker(time.Second * time.Duration(config.Interval) )//* 20
+	defer pollerTicker.Stop()
+
 	// Start retriveing and sending metrics
 	stdlog.Println("Retrieving metrics")
 	for _, kvm := range config.Kvms {
@@ -150,8 +150,7 @@ func (service *Service) Manage() (string, error) {
 			config.Backend.SendMetrics(values)
 			stdlog.Printf("Sent %d metrics to backend", len(values))
 		case values := <-finders:
-
-			url := fmt.Sprintf("%s?api_key=%s&host=%s", config.Backend.HostUrl, config.Backend.ApiKey, values.Host)
+			url := fmt.Sprintf("%s%s?api_key=%s&host=%s", config.Backend.KongHost, config.Backend.HostUrl, config.Backend.ApiKey, values.Host)
 			config.Backend.SendHost(values.Infos, url)
 			stdlog.Printf("Sent %d host info to backend", len(values.Infos))
 		case <-ticker.C:
@@ -164,6 +163,11 @@ func (service *Service) Manage() (string, error) {
 			for _, kvm := range config.Kvms {
 				go queryKvmHost(*kvm, &finders)
 			}
+		case <-pollerTicker.C:
+			stdlog.Println("pollerTicker metrics")
+			url := fmt.Sprintf("%s%s?api_key=%s", config.Backend.KongHost, config.Backend.PollerUrl, config.Backend.ApiKey)
+			config.Backend.SendPollerMetrics(url)
+
 		case killSignal := <-interrupt:
 			stdlog.Println("Got signal:", killSignal)
 			if killSignal == os.Interrupt {
