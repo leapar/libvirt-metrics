@@ -50,6 +50,6 @@ Dockerfile 是我处理以后的，打出来镜像80M
   
  docker build -t leapar/libvirt:0.11 .
  docker run -d leapar/libvirt:0.11
- docker run -v `pwd`/libvirt-metrics.json:/etc/libvirt-metrics.json -d test/libvirt:0.1  
+ docker run -v `pwd`/libvirt-metrics.json:/etc/libvirt-metrics.json -d leapar/libvirt:0.11  
 
 ```
