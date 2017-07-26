@@ -10,4 +10,6 @@ RUN set -ex && \
 ADD libvirt-metrics.json /etc/libvirt-metrics.json
 ENV PATH /go/bin:$PATH
 
+RUN echo "Asia/Shanghai" > /etc/timezone
+
 CMD ["libvirt-metrics"]

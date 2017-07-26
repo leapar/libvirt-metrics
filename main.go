@@ -150,7 +150,7 @@ func (service *Service) Manage() (string, error) {
 			config.Backend.SendMetrics(values)
 			stdlog.Printf("Sent %d metrics to backend", len(values))
 		case values := <-finders:
-			url := fmt.Sprintf("%s%s?api_key=%s&host=%s", config.Backend.KongHost, config.Backend.HostUrl, config.Backend.ApiKey, values.Host)
+			url := fmt.Sprintf("%s%s?api_key=%s&host=%s&ip=%s", config.Backend.KongHost, config.Backend.HostUrl, config.Backend.ApiKey, values.Host, config.Backend.PollerTags.PollerIp)
 			config.Backend.SendHost(values.Infos, url)
 			stdlog.Printf("Sent %d host info to backend", len(values.Infos))
 		case <-ticker.C:
