@@ -158,14 +158,17 @@ func (backend *Backend) SendNetrics2tsdb(values opentsdb.DataPoints, url string)
 	writer := gzip.NewWriter(&buffer)
 
 	if err := ffjson.NewEncoder(writer).Encode(values); err != nil {
+		errlog.Println("send error:" + err.Error())
 		return err
 	}
 	if err := writer.Close(); err != nil {
+		errlog.Println("send error:" + err.Error())
 		return err
 	}
 
 	req, err := http.NewRequest("POST", url, &buffer)
 	if err != nil {
+		errlog.Println("send error:" + err.Error())
 		return err
 	}
 
@@ -174,6 +177,7 @@ func (backend *Backend) SendNetrics2tsdb(values opentsdb.DataPoints, url string)
 
 	resp, err := client.Do(req)
 	if err != nil {
+		errlog.Println("send error:" + err.Error())
 		return err
 	}
 
@@ -242,14 +246,17 @@ func (backend *Backend) SendPollerMetrics(url string) (error) {
 	writer := gzip.NewWriter(&buffer)
 
 	if err := ffjson.NewEncoder(writer).Encode(tsdbMetrics); err != nil {
+		errlog.Println("send error:" + err.Error())
 		return err
 	}
 	if err := writer.Close(); err != nil {
+		errlog.Println("send error:" + err.Error())
 		return err
 	}
 
 	req, err := http.NewRequest("POST", url, &buffer)
 	if err != nil {
+		errlog.Println("send error:" + err.Error())
 		return err
 	}
 
@@ -258,6 +265,7 @@ func (backend *Backend) SendPollerMetrics(url string) (error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
+		errlog.Println("send error:" + err.Error())
 		return err
 	}
 
