@@ -1,5 +1,5 @@
 # 说明
-来自https://github.com/kumina/libvirt_exporter，研究学习用
+来自https://github.com/kumina/libvirt_exporter, 研究学习用
 
 # 抓取kvm指标信息
 
